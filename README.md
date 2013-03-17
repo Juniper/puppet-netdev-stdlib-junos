@@ -1,7 +1,10 @@
 # OVERVIEW
 
-Netdev is a vendor-neutral network abstraction framework developed by Juniper Networks 
-and contributed freely to the DevOps community
+Netdev is a vendor-neutral network abstraction framework developed by 
+Juniper Networks and contributed freely to the DevOps community
+
+This module contains the Junos specific Provider code impelmenting
+the Resource Types defined in netdevops/netdev-stdlib
 
 # EXAMPLE USAGE
 
