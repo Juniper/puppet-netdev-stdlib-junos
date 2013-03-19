@@ -14,6 +14,9 @@
 ### 2013-03-15
 * Bugfixes, and support for broader Junos products
 
+### 2013-03-19
+* Updated code to support 'feature' controls, requires netdev-stdlib 0.9.1
+
 
   
 

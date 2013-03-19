@@ -40,9 +40,10 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..","..",".."))
 require 'puppet/provider/junos/junos_interface'
 
 Puppet::Type.type(:netdev_interface).provide(:junos_switch, :parent => Puppet::Provider::Junos::Interface) do
-  confine :junos_ifd_style => :switch
-  
   @doc = "Junos Physical Interface"
+
+  has_feature :activable
+  confine :junos_ifd_style => :switch
   
   ### invoke class method to autogen the default property methods for both Puppet
   ### and the netdev module.  That's it, yo!
@@ -55,9 +56,10 @@ end
 require 'puppet/provider/junos/junos_interface_classic'
 
 Puppet::Type.type(:netdev_interface).provide(:junos_classic, :parent => Puppet::Provider::Junos::InterfaceClassic) do
-  confine :junos_ifd_style => :classic
-  
   @doc = "Junos Physical Interface, Classic Style"
+  
+  has_feature :activable
+  confine :junos_ifd_style => :classic
   
   ### invoke class method to autogen the default property methods for both Puppet
   ### and the netdev module.  That's it, yo!
