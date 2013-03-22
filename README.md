@@ -4,7 +4,7 @@ Netdev is a vendor-neutral network abstraction framework developed by
 Juniper Networks and contributed freely to the DevOps community
 
 This module contains the Junos specific Provider code impelmenting
-the Resource Types defined in netdevops/netdev-stdlib
+the Resource Types defined in netdevops/netdev_stdlib
 
 # EXAMPLE USAGE
 
@@ -55,7 +55,7 @@ node "myswitch1234.mycorp.com" {
 # INSTALLATION ON PUPPET-MASTER
 
   * gem install netconf
-  * puppet module install juniper/netdev-stdlib-junos 
+  * puppet module install juniper/netdev_stdlib_junos 
 
 # RESOURCE TYPES
 
