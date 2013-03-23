@@ -50,7 +50,7 @@ node "myswitch1234.mycorp.com" {
 
   * Puppet 2.7.19
   * Ruby Gem netconf 0.2.5
-  * Puppet module netdevops/netdev-stdlib
+  * Puppet module netdevops/netdev_stdlib
 
 # INSTALLATION ON PUPPET-MASTER
 
