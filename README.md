@@ -1,5 +1,7 @@
 # OVERVIEW
 
+_NOTE_: UNDERVER DEVELOPMENT FOR 1.0.0 RELEASE
+
 Netdev is a vendor-neutral network abstraction framework developed by 
 Juniper Networks and contributed freely to the DevOps community
 
@@ -50,7 +52,12 @@ node "myswitch1234.mycorp.com" {
 
   * Puppet 2.7.19
   * Ruby Gem netconf 0.2.5
-  * Puppet module netdevops/netdev_stdlib
+  * Puppet module netdevops/netdev_stdlib version 1.0.0
+  * Junos "jpuppet" package version 1.0.0 (not yet released)
+  * Junos OS release by platform:
+    * QFX: 12.3X50-D20.1 (released)
+    * EX:  12.3R2 (not yet released)
+    * MX:  12.3R2 (not yet released)
 
 # INSTALLATION ON PUPPET-MASTER
 
