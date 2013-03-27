@@ -100,14 +100,16 @@ module NetdevJunos
       if @property_hash.empty?      
         
         @top_xml ||= @pp_obj.netdev_resxml_top( xml )
-        unless @pp_obj.resource[:active] == @pp_obj.ndev_res[:active]
-          @pp_obj.netdev_resxml_change_active( @top_xml ) 
+        unless @pp_obj.ndev_res[:unmanaged_active]
+          unless @pp_obj.resource[:active] == @pp_obj.ndev_res[:active]
+            @pp_obj.netdev_resxml_change_active( @top_xml ) 
+          end
         end
         dot = @pp_obj.netdev_resxml_edit( @top_xml )
         @pp_obj.netdev_resxml_new( dot )       
         
       else
-        
+                
         @top_xml ||= @pp_obj.netdev_resxml_top( xml )
         
         if @property_hash.delete :active
