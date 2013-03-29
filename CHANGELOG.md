@@ -15,7 +15,10 @@
 * Bugfixes, and support for broader Junos products
 
 ### 2013-03-19
-* Updated code to support 'feature' controls, requires netdev-stdlib 0.9.1
+* Updated code to support 'feature' controls, requires netdevops/netdev_stdlib
+
+### 2013-03-29
+* Bugfixes, ready for release 1.0.0
 
 
   

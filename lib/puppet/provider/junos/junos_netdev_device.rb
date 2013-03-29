@@ -88,11 +88,7 @@ module NetdevJunos
           report_show_compare          
           @netconf.rpc.commit_configuration( :log => "Puppet agent catalog: #{@catalog_version}" )                    
         rescue Netconf::RpcError => e
-          if e.rsp.xpath('ok')
-            NetdevJunos::Log.notice "OK: COMMIT success! with warnings", :tags => [:config, :success, :warnings]            
-          else
-            NetdevJunos::Log.err "ERROR: Configuration change\n" + e.rsp.to_xml, :tags => [:config, :fail]
-          end
+          NetdevJunos::Log.err "ERROR: Configuration change\n" + e.rsp.to_xml, :tags => [:config, :fail]       
         else
           NetdevJunos::Log.notice "OK: COMMIT success!", :tags => [:config, :success]
         ensure
