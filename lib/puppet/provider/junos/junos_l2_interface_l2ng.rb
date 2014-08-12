@@ -287,14 +287,6 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
     port_mode = should_trunk? ? 'trunk' : 'access'
     xml.send :"interface-mode", port_mode
     
-    if is_trunk? and not should_trunk?
-      # trunk --> access
-      self.class.set_ifd_trunking( xml, false )
-    elsif should_trunk? and not is_trunk?
-      # access --> trunk
-      self.class.set_ifd_trunking( xml, true )
-    end    
-    
     # when the vlan_tagging value changes then this method
     # will trigger updates to the untagged_vlan and tagged_vlans
     # resource values as well.
@@ -481,19 +473,6 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
         end
       end    
     end 
-
-    def set_ifd_trunking( xml, should_trunk )
-      par = xml.instance_variable_get(:@parent)     
-      Nokogiri::XML::Builder.with( par.at_xpath( 'ancestor::interface' )) do |dot|
-        if should_trunk
-          dot.send( :'flexible-vlan-tagging' )
-          dot.send( :'encapsulation', 'flexible-ethernet-services' )
-        else
-          dot.send( :'flexible-vlan-tagging', Netconf::JunosConfig::DELETE )
-          dot.send( :'encapsulation', Netconf::JunosConfig::DELETE )
-        end
-      end       
-    end  
     
   end # class methods for changing untagged_vlan
   
