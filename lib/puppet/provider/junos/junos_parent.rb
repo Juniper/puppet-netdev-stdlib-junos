@@ -88,7 +88,7 @@ class Puppet::Provider::Junos < Puppet::Provider
   end
   
   def self.mk_netdev_resource_methods
-    (resource_type.validproperties - [:ensure]).each do |prop|
+    (resource_type.validproperties - [:ensure]).sort.each do |prop|
       prop_sym = Facter.value(:puppetversion).to_i >= 3 ? prop.intern : symbolize(prop)
       define_method(prop_sym) do
         netdev_res_property( prop_sym )

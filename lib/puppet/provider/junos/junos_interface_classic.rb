@@ -53,7 +53,12 @@ class Puppet::Provider::Junos::InterfaceClassic < Puppet::Provider::Junos
     @ndev_res[:duplex] = case ifd.xpath('link-mode').text.chomp
       when 'full-duplex' then :full
       when 'half-duplex' then :half
-      else :auto
+      else
+        if Facter.value('hardwaremodel') =~ /^ex4300/i
+          :full
+        else
+          :auto
+        end
     end
       
     @ndev_res[:speed] = ( speed = ifd.xpath('speed')[0] ) ? speed.text : :auto
@@ -116,8 +121,11 @@ class Puppet::Provider::Junos::InterfaceClassic < Puppet::Provider::Junos
     end
   end
   
-  def xml_change_duplex( xml )     
-    if resource[:duplex] == :auto
+  def xml_change_duplex( xml )
+   if Facter.value('hardwaremodel') =~ /^ex4300/i
+     return (resource[:duplex] == :full) ? nil : (NetdevJunos::Log.notice "On EX4300 switches, the interfaces operate in full duplex mode only. Duplex attribute value \'#{resource[:duplex]}\' will be ignored")
+   end  
+   if resource[:duplex] == :auto
       unless @ndev_res.is_new?
         xml.send( :'link-mode', Netconf::JunosConfig::DELETE )
       end

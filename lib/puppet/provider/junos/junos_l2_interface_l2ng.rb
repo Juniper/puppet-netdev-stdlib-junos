@@ -48,7 +48,6 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
     resource[:tagged_vlans] = resource[:tagged_vlans].to_a || []     
     resource[:untagged_vlan] ||= ''     # if not set in manifest, it is nil   
     resource[:vlan_tagging] = :enable unless resource[:tagged_vlans].empty? 
-    resource[:tagged_vlans] += [resource[:untagged_vlan]] unless resource[:untagged_vlan].empty?    
     
     self.class.initcvar_for_untagged_vlan      
     self.class.initcvar_vlanxrefs( resource )    
@@ -100,8 +99,7 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
     # --- access port      
     
     if @ndev_res[:vlan_tagging] == :disable
-      vlan_id = fam_eth_cfg.xpath('vlan/members').text.chomp || ''
-      @ndev_res[:untagged_vlan] = self.class.vlan_tags_to_names( vlan_id )
+      @ndev_res[:untagged_vlan] = fam_eth_cfg.xpath('vlan/members').text.chomp || ''
       return
     end
         
@@ -110,9 +108,7 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
     native_vlan_id = @ifd_config.xpath('native-vlan-id').text.chomp;
     @ndev_res[:untagged_vlan] = native_vlan_id.empty? ? '' : self.class.vlan_tags_to_names( native_vlan_id ) 
     
-    vlan_id_list = fam_eth_cfg.xpath('vlan/members').collect { |v| v.text.chomp } 
-    @ndev_res[:tagged_vlans] = self.class.vlan_tags_to_names( vlan_id_list )
-    
+    @ndev_res[:tagged_vlans] = fam_eth_cfg.xpath('vlan/members').collect { |v| v.text.chomp }
   end
   
   def is_trunk?
@@ -315,15 +311,15 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
     has = has.map(&:to_s)    
     should = should.map(&:to_s)        
     
-    del = self.class.vlan_names_to_tags( has - should )
-    add = self.class.vlan_names_to_tags( should - has )    
+    del = has - should
+    add = should - has
     
     if add or del
       Puppet.debug "#{resource[:name]}: Adding VLANS: [#{add.join(',')}]" unless add.empty?
       Puppet.debug "#{resource[:name]}: Deleting VLANS: [#{del.join(',')}]" unless del.empty? 
       xml.vlan {
-        del.each{|tag_id| xml.members tag_id, Netconf::JunosConfig::DELETE }
-        add.each{|tag_id| xml.members tag_id }
+        del.each{|v| xml.members v, Netconf::JunosConfig::DELETE }
+        add.each{|v| xml.members v }
       }
     end
     
@@ -449,12 +445,11 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
     ### -------------------------------------------------------------
     
     def set_vlan_id( this, xml, delete = :no )
-      vlan_id = vlan_names_to_tags( this.resource[:untagged_vlan] )
-      xml.vlan {
-        if delete == :delete 
-          xml.members vlan_id, Netconf::JunosConfig::DELETE 
+      xml.vlan( Netconf::JunosConfig::REPLACE ) {
+        if delete == :delete
+          xml.members this.resource[:untagged_vlan], Netconf::JunosConfig::DELETE
         else
-          xml.members vlan_id
+          xml.members this.resource[:untagged_vlan]
         end
       }
     end
@@ -467,9 +462,6 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
           dot.send( :'native-vlan-id', Netconf::JunosConfig::DELETE )
         else
           dot.send( :'native-vlan-id', vlan_id )    
-          xml.vlan {
-            xml.members vlan_id
-          }
         end
       end    
     end 
