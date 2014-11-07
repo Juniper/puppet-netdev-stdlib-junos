@@ -59,21 +59,8 @@ Puppet::Type.type(:netdev_interface).provide(:junos_classic, :parent => Puppet::
   @doc = "Junos Physical Interface, Classic Style"
   
   has_feature :activable
-  confine :junos_ifd_style => :classic
-  ### invoke class method to autogen the default property methods for both Puppet
-  ### and the netdev module.  That's it, yo!
-
-  mk_resource_methods    
-  mk_netdev_resource_methods  
-  
-end
-
-Puppet::Type.type(:netdev_interface).provide(:junos_classic, :parent => Puppet::Provider::Junos::InterfaceClassic) do
-  @doc = "Junos Physical Interface, Classic Style"
-  
-  has_feature :activable
-  confine :junos_ifd_style => :switch
-  confine :junos_switch_style => :vlan_l2ng
+  confine :junos_ifd_style => [:classic, :switch]
+  confine :junos_switch_style => [:vlan_l2ng, :bridge_domain]  
   ### invoke class method to autogen the default property methods for both Puppet
   ### and the netdev module.  That's it, yo!
 
