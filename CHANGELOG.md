@@ -20,6 +20,10 @@
 ### 2013-03-29
 * Bugfixes, ready for release 1.0.0
 
+### 2014-09-24
+* Bugfixes, upgrade version to 1.0.2
 
+### 2015-05-05
+* Add support for new JUNOS resource type "netdev_group", upgrade to version 2.0.0
   
 

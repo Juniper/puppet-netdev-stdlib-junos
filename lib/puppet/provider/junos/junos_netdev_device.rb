@@ -9,7 +9,7 @@ module NetdevJunos
   
   class Device
     
-    attr_accessor :netconf, :ready
+    attr_accessor :netconf, :ready, :edits_count
     
     def initialize( catalog_version )
       
@@ -38,13 +38,16 @@ module NetdevJunos
       
     end
     
-    def edit_config( jcfg_obj )      
-      edits = Netconf::JunosConfig.new(:TOP)
-      edits << jcfg_obj
+    def edit_config( jcfg_obj, format )      
+      if jcfg_obj.is_a?(Resource)
+        edits = Netconf::JunosConfig.new(:TOP)
+        edits << jcfg_obj
+        load_config = edits.doc.root 
+        NetdevJunos::Log.debug load_config.to_xml, :tags => [:config, :changes]
       
-      load_config = edits.doc.root      
-      
-      NetdevJunos::Log.debug load_config.to_xml, :tags => [:config, :changes]
+      else
+        load_config = jcfg_obj
+      end     
       
       # if there is an RPC error (syntax error), it will generate an exception, and 
       # we want that to "bubble-up" to the calling context so don't 
@@ -53,7 +56,7 @@ module NetdevJunos
       begin
         
         @edits_count += 1
-        @netconf.rpc.load_configuration( load_config, :action => 'replace' )
+        @netconf.rpc.load_configuration( load_config, :action => 'replace', :format => format )
         
       rescue Netconf::RpcError => e
         # the load_configuration may yeield rpc-errors that are in fact not errors, 

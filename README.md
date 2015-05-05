@@ -3,12 +3,12 @@
 Netdev is a vendor-neutral network abstraction framework developed by 
 Juniper Networks and contributed freely to the DevOps community
 
-This module contains the Junos specific Provider code impelmenting
+This module contains the Junos specific Provider code implementing
 the Resource Types defined in [netdevops/netdev_stdlib](https://github.com/NetdevOps/puppet-netdev-stdlib)
 
 # EXAMPLE USAGE
 
-This module has been tested against Puppet agent 2.7.19.  Here is a short example of a static manifest for a Junos EX switch.  This example assumes that you've also installed the Puppet _stdlib_ module as this example uses the _keys_ function.
+This module has been tested against Puppet agent 2.7.19 and 3.6.1.  Here is a short example of a static manifest for a Junos EX switch.  This example assumes that you've also installed the Puppet _stdlib_ module as this example uses the _keys_ function.
 
 ~~~~
 node "myswitch1234.mycorp.com" {
@@ -48,7 +48,7 @@ node "myswitch1234.mycorp.com" {
   
 # DEPENDENCIES
 
-  * Puppet 2.7.19
+  * Puppet >= 2.7.19
   * Ruby Gem netconf 0.2.5
   * Puppet module netdevops/netdev_stdlib version >= 1.0.0
   * Junos OS release and jpuppet image by platform:
@@ -64,11 +64,17 @@ node "myswitch1234.mycorp.com" {
     * MX5, MX10, MX40, MX80: 
       - JUNOS 12.3R2.5
       - jpuppet-mx80-1.0R1.1
-
+    * QFX5100:
+	  - JUNOS >= 14.2
+	  - jpuppet-3.6.1_1.junos.i386.tgz
+	* EX4300
+      - JUNOS >= 14.2
+      - jpuppet-3.6.1_1.junos.powerpc.tgz
+	  
 # INSTALLATION ON PUPPET-MASTER
 
   * gem install netconf
-  * puppet module install juniper/netdev_stdlib_junos 
+  * puppet module install juniper/netdev_stdlib_junos --version 2.0.0
 
 # RESOURCE TYPES
 
@@ -77,7 +83,8 @@ See RESOURCE-STDLIB.md for documentation and usage examples
 # CONTRIBUTORS
 
    Jeremy Schulman, Juniper Networks
-
+   Ganesh Nalawade, Juniper Networks 
+   
 # LICENSES
 
    See LICENSE-JUNIPER
