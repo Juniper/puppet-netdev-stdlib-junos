@@ -110,7 +110,7 @@ class Puppet::Provider::Junos < Puppet::Provider
   
   def config_update( name )
     @ndev_res.update name
-    @@netdev.edit_config( @ndev_res )
+    @@netdev.edit_config( @ndev_res, "xml" )
   end
   
   def config_del( name )
