@@ -82,8 +82,8 @@ See RESOURCE-STDLIB.md for documentation and usage examples
 
 # CONTRIBUTORS
 
-   Jeremy Schulman, Juniper Networks
-   Ganesh Nalawade, Juniper Networks 
+   * Jeremy Schulman, Juniper Networks
+   * Ganesh Nalawade, Juniper Networks 
    
 # LICENSES
 
