@@ -142,3 +142,80 @@ node "switch1234.mycorp.com" {
 }
 
 ````
+
+## netdev_stdlib_junos::apply_group
+
+This defined type apply_group used for Generic configuration using
+puppet template resource:
+
+  * template_path => _Template file path used to generate JUNOS configuration on device_
+  * active => [ true | false ]
+  * ensure => [ present | absent ]
+
+````puppet
+node "switch1234.mycorp.com" {
+
+  netdev_device { $hostname: }
+
+  # service variables passed in template file
+  $services = [ [ 'ftp' ], [ 'ssh' ], [ 'telnet' ], [ 'netconf', 'ssh' ] ]
+
+  netdev_stdlib_junos::apply_group{ "services_group":
+    template_path => "netdev_stdlib_junos/services.set.erb",
+    active        => true,
+    ensure        => present,
+  }
+
+  # Interface variable passed in 'interface.set.erb' template file
+  $interfaces = { 'ge-1/2/0' => {'unit' => 0, 'description' => 'to-A', 'family' => 'inet', 'address' => '10.10.10.1/30' },
+                'ge-1/1/1' => {'unit' => 0, 'description' => 'to-B', 'family' => 'inet', 'address' => '10.10.10.5/30' },
+                'ge-1/1/0' => {'unit' => 0, 'description' => 'to-C', 'family' => 'inet', 'address' => '10.10.10.9/30' },
+                'ge-1/2/1' => {'unit' => 0, 'description' => 'to-D', 'family' => 'inet', 'address' => '10.21.7.1/30' }
+  }
+
+  netdev_stdlib_junos::apply_group{ "interface_group":
+    template_path => "netdev_stdlib_junos/interface.set.erb",
+    active        => true,
+    ensure        => present,
+  }
+
+  # Syslog variable passed in 'syslog.text.erb' template file
+  $syslog_names = {
+  'messages' =>             [ { 'facility' => 'any', 'level' => 'critical' }, { 'facility' => 'authorization', 'level' => 'info' } ] ,
+  'interactive-commands' => [ { 'facility' => 'interactive-commands', 'level' => 'error'} ]
+  }
+
+  netdev_stdlib_junos::apply_group{ "syslog_group":
+    template_path => "netdev_stdlib_junos/syslog.text.erb",
+    active        => true,
+    ensure        => present,
+  }
+
+  
+  # Event-policy variable passed in 'event-options.xml.erb' template file
+  $policy = {
+            'p1' => {
+                        'events'       => [ 'TEST' ],
+                        'action'       => 'then',
+                        'event-script' => 'hello.slax'
+                    }
+          }
+  $event_script = [ 'hello.slax' ]
+
+  # file resource copies the file hello.slax from master to agent
+  file { '/var/db/scripts/event/hello.slax':
+    mode => 0644,
+    source => "puppet:///modules/netdev_stdlib_junos/junoscripts/event/hello.slax",
+  }
+  
+  # Configure event policy and event script
+  netdev_stdlib_junos::apply_group{ "event_options_group":
+    template_path => "netdev_stdlib_junos/event-options.xml.erb",
+    active        => true,
+    ensure        => present,
+  }
+
+}
+
+````
+

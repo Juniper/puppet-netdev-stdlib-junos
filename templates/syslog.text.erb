@@ -1,0 +1,11 @@
+system {
+    syslog {
+    <% @syslog_names.each do | name, details | %>
+    	<% details.each do | detail | %>
+		file <%= name %> {
+             		<%= detail['facility'] %> <%= detail['level'] %>
+ 		}
+        <% end %>
+    <% end %> 
+    }
+}

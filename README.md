@@ -43,6 +43,50 @@ node "myswitch1234.mycorp.com" {
   netdev_l2_interface { $uplink_ports:
     tagged_vlans => keys( $vlans )
   }
+
+  # service variables passed in template file
+  $services = [ [ 'ftp' ], [ 'ssh' ], [ 'telnet' ], [ 'netconf', 'ssh' ] ]
+
+  netdev_stdlib_junos::apply_group{ "services_group":
+    template_path => "netdev_stdlib_junos/services.set.erb",
+    active        => true,
+    ensure        => present,
+  }
+  
+  # Syslog variable passed in 'syslog.text.erb' template file
+  $syslog_names = {
+  'messages' =>             [ { 'facility' => 'any', 'level' => 'critical' }, { 'facility' => 'authorization', 'level' => 'info' } ] ,
+  'interactive-commands' => [ { 'facility' => 'interactive-commands', 'level' => 'error'} ]
+  }
+
+  netdev_stdlib_junos::apply_group{ "syslog_group":
+    template_path => "netdev_stdlib_junos/syslog.text.erb",
+    active        => true,
+    ensure        => present,
+  }
+  
+  # Event-policy variable passed in 'event-options.xml.erb' template file
+  $policy = {
+            'p1' => {
+                        'events'       => [ 'TEST' ],
+                        'action'       => 'then',
+                        'event-script' => 'hello.slax'
+                    }
+          }
+  $event_script = [ 'hello.slax' ]
+
+  # file resource copies the file hello.slax from master to agent
+  file { '/var/db/scripts/event/hello.slax':
+    mode => 0644,
+    source => "puppet:///modules/netdev_stdlib_junos/junoscripts/event/hello.slax",
+  }
+  
+  # Configure event policy and event script
+  netdev_stdlib_junos::apply_group{ "event_options_group":
+    template_path => "netdev_stdlib_junos/event-options.xml.erb",
+    active        => true,
+    ensure        => present,
+  }  
 }
 ~~~~
   
