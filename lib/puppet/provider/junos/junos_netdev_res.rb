@@ -135,7 +135,7 @@ module NetdevJunos
       xml = cfg.doc
       at_ele = cfg.edit_path( xml, @edit_path ) 
       Nokogiri::XML::Builder.with( at_ele ) do |dot|
-        @pp_obj.netdev_resxml_top( dot ) unless dot
+        @pp_obj.netdev_resxml_top( dot ) 
       end
       return xml      
     end

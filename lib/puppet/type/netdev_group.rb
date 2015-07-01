@@ -15,6 +15,9 @@
 
 Puppet::Type.newtype(:netdev_group) do
   @doc = "Network Device Group Configuration"
+  
+  feature :refreshable, "The provider can restart the service.",
+     :methods => [:restart]
 
   ensurable
   feature :activable, "The ability to activate/deactive configuration"  
@@ -70,5 +73,8 @@ Puppet::Type.newtype(:netdev_group) do
     netdev.title   # returns the name of the netdev_device resource
   end  
   
+  def refresh
+    provider.refresh
+  end  
 end
 

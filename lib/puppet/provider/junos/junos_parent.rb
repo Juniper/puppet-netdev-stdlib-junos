@@ -68,7 +68,12 @@ class Puppet::Provider::Junos < Puppet::Provider
       Puppet.debug( "#{self.resource.type}:: Nothing to flush #{resource[:name]}" )       
     end
   end     
-  
+ 
+  def refresh
+    Puppet.debug( "#{self.resource.type}: REFRESH #{resource[:name]}" )
+    flush 
+  end
+
   def netdev_create
     @@netdev ||= NetdevJunos::Device.new( resource.catalog.version )
     netdev_get
@@ -166,8 +171,3 @@ class Puppet::Provider::Junos < Puppet::Provider
   end   
   
 end
-
-
-
-
-

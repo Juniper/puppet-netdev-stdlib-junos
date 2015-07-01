@@ -1,0 +1,3 @@
+<% @interfaces.each do | name, hash | %>
+set interfaces <%= name %> description <%= hash['description'] %> unit <%= hash['unit']%> family <%= hash['family'] %> address <%= hash['address']%>
+<% end %>

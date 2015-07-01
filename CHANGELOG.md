@@ -26,4 +26,5 @@
 ### 2015-05-05
 * Add support for new JUNOS resource type "netdev_group", upgrade to version 2.0.0
   
-
+### 2015-06-30
+* Add support for defined type 'apply_group' and minor bug fixes

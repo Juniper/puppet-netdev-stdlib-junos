@@ -38,7 +38,6 @@ require 'puppet/provider/junos/junos_parent'
 
 class Puppet::Provider::Junos::Group < Puppet::Provider::Junos 
 
-
   ### ---------------------------------------------------------------  
   ### triggered from Provider #exists?
   ### ---------------------------------------------------------------  
@@ -112,12 +111,11 @@ class Puppet::Provider::Junos::Group < Puppet::Provider::Junos
   #####              XML Resource Building
   ##### ------------------------------------------------------------   
   
-  # override default 'top' method to create the unit sub-interface
-
+  # override default 'top' method 
   def netdev_resxml_top( xml )
     xml.name resource[:name]
-    par = xml.instance_variable_get(:@parent)    
-    par['replace'] = 'replace'
+    par = xml.instance_variable_get(:@parent)
+    par['replace'] = 'replace' unless resource[:ensure] == :absent
     return xml
   end
 
@@ -161,6 +159,33 @@ class Puppet::Provider::Junos::Group < Puppet::Provider::Junos
       apply_groups
     end
 
+  end
+
+  ##### ------------------------------------------------------------
+  ##### Device provider methods expected by Puppet
+  ##### ------------------------------------------------------------
+
+  def flush
+    ## handle netdev_group attribute change     
+    if netdev_res_exists?
+      if resource[:ensure] == :absent or 
+         resource[:active] != @ndev_res[:active]
+        Puppet::Provider::Junos.instance_method(:flush).bind(self).call  
+      else
+        Puppet.debug( "#{self.resource.type}:: Nothing to flush #{resource[:name]}" ) 
+      end
+    elsif resource[:ensure] == :present
+      Puppet::Provider::Junos.instance_method(:flush).bind(self).call
+    else
+      Puppet.debug( "#{self.resource.type}:: Nothing to flush #{resource[:name]}" )
+    end    
+     
+  end
+
+  def refresh
+    ## handle refresh event from file resource types
+    Puppet.debug( "#{self.resource.type}: REFRESH #{resource[:name]}" )
+    Puppet::Provider::Junos.instance_method(:flush).bind(self).call
   end
 
 end  

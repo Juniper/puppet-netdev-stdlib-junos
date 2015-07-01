@@ -1,0 +1,25 @@
+<% @event_script.each do | script | %>
+<event-options>
+  <event-script>
+    <file> 
+      <name><%=script%></name>
+    </file>
+  </event-script>
+</event-options>
+<% end %>
+
+<% @policy.each do | key, val | %>
+<event-options>
+  <policy> 
+    <name><%=key%></name>
+  <% val['events'].each do | event | %>
+    <events><%=event%></events>
+  <% end %>
+    <then>
+      <event-script>
+        <name><%=val['event-script']%></name>
+      </event-script>
+    </then>
+  </policy>
+</event-options>
+<% end %>
