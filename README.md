@@ -118,7 +118,7 @@ node "myswitch1234.mycorp.com" {
 # INSTALLATION ON PUPPET-MASTER
 
   * gem install netconf
-  * puppet module install juniper/netdev_stdlib_junos --version 2.0.0
+  * puppet module install juniper/netdev_stdlib_junos
 
 # RESOURCE TYPES
 
