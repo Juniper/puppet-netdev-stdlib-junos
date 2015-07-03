@@ -50,8 +50,15 @@ class Puppet::Provider::Junos::LAG < Puppet::Provider::Junos
     if Facter.value(:junos_ifd_style) == 'classic'
       # all ports in the LAG must be of the same type, so check the first one
       # and use it to determine the options stanza name.  yo.
-      l_0 = resource[:links][0].to_s
-      @ifd_ether_options = (l_0.start_with? 'fe-') ? 'fastether-options' : 'gigether-options'
+      if resource[:links].nil?
+         @ndev_res ||= NetdevJunos::Resource.new( self, 'interfaces', 'interface')
+         ndev_config = @ndev_res.getconfig
+         l_0= ndev_config.xpath('//interfaces/interface/apply-macro/data/name')[0].text
+         @ifd_ether_options = (l_0.start_with? 'fe-') ? 'fastether-options' : 'gigether-options'
+      else
+         l_0 = resource[:links][0].to_s
+         @ifd_ether_options = (l_0.start_with? 'fe-') ? 'fastether-options' : 'gigether-options'
+      end
     else
       # switching platforms are standardized on the same stanza name. 
       @ifd_ether_options = 'ether-options'    
@@ -103,9 +110,9 @@ class Puppet::Provider::Junos::LAG < Puppet::Provider::Junos
   
     @ndev_res ||= NetdevJunos::Resource.new( self, 'interfaces', 'interface' )       
     ndev_config = @ndev_res.getconfig    
-
+  
     return nil unless lagcfg = ndev_config.xpath( '//interface')[0] 
-    
+  
     @ndev_res.set_active_state( lagcfg )         
     return lagcfg
   end
