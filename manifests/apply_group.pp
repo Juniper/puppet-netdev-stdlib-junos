@@ -3,7 +3,7 @@
 define netdev_stdlib_junos::apply_group(
   $template_path,
   $ensure            = 'present',
-  $active            = 'true',
+  $active            = true,
   $config_file_owner = undef,
   $config_file_mode  = '0664'
 ) {
