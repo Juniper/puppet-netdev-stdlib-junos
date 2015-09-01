@@ -128,7 +128,14 @@ class Puppet::Provider::Junos::BridgeDomain < Puppet::Provider::Junos
     catalog = resource.catalog
     
     rpc = @ndev_res.rpc
-    bd_info = rpc.get_bridge_instance_information( :bridge_domain_name => vlan_name )
+    begin
+      bd_info = rpc.get_bridge_instance_information( :bridge_domain_name => vlan_name )
+    rescue Netconf::RpcError => e 
+      # if rpc is not supported on device return
+      errmsg = e.to_s	
+      NetdevJunos::Log.notice errmsg
+      return
+    end  
     intfs = bd_info.xpath('//l2rtb-interface-name')
         
     intfs.each do |x_int|
