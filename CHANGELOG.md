@@ -27,4 +27,9 @@
 * Add support for new JUNOS resource type "netdev_group", upgrade to version 2.0.0
   
 ### 2015-06-30
-* Add support for defined type 'apply_group' and minor bug fixes
+* Add support for defined type 'apply_group' and minor bug fixes, upgrade to version 2.0.1-beta
+
+### 2015-09-08
+* Fixed puppet lint issues
+* Bugfixes
+* Upgrade version to 2.0.1

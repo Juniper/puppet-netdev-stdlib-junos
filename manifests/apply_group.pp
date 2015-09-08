@@ -1,8 +1,7 @@
-# == Define: netdev_stdlib_junos::apply_group
-#
+# See README.md for usage information
 define netdev_stdlib_junos::apply_group(
   $template_path,
-  $ensure            = 'present',
+  $ensure            = present,
   $active            = true,
   $config_file_owner = undef,
   $config_file_mode  = '0664'
@@ -26,12 +25,12 @@ define netdev_stdlib_junos::apply_group(
     notify  => netdev_group[ $title ],
     backup  => false
   }
-
+        
   netdev_group{ $title:
     ensure => $ensure,
     path   => $path,
     format => $format,
     active => $active,
   }
-
+        
 }
