@@ -42,7 +42,6 @@ Puppet::Type.type(:netdev_lag).provide(:junos, :parent => Puppet::Provider::Juno
   @doc = "Junos Link Aggregation Group"
   
   has_feature :activable
-  confine :kernel => :JUNOS
   
   ### invoke class method to autogen the default property methods for both Puppet
   ### and the netdev module.  That's it, yo!
