@@ -41,7 +41,7 @@ require 'puppet/provider/junos/junos_group'
 Puppet::Type.type(:netdev_group).provide(:junos_group, :parent => Puppet::Provider::Junos::Group) do
   @doc = "Junos Configuration Group"
   has_feature :activable
-  confine :kernel => :JUNOS
+  
   ### invoke class method to autogen the default property methods for both Puppet
   ### and the netdev module.  That's it, yo!
    
