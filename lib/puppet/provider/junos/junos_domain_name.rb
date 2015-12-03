@@ -40,18 +40,6 @@
 require 'net/netconf/jnpr'
 require 'net/netconf/jnpr/ioproc'
 
-require 'puppet/provider/junos/junos_netdev_device'
+require 'puppet/provider/junos/junos_domain_name'
 require 'puppet/provider/junos/junos_netdev_res'
 require 'puppet/provider/junos/junos_netdev_log'
-
-
-
-
-
-
-
-
-
-
-
-

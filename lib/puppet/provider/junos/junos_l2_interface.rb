@@ -88,7 +88,7 @@ class Puppet::Provider::Junos::L2Interface < Puppet::Provider::Junos
   end
   
   def default_description
-    "Puppet created netdev_l2_interface: #{resource[:name]}"
+    "Puppet created network_trunk: #{resource[:name]}"
   end
   
   def netdev_retrieve_fam_eth_info( fam_eth_cfg )

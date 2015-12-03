@@ -1,13 +1,13 @@
 =begin
 * Puppet Module  : Provder: netdev
 * Author         : Jeremy Schulman
-* File           : puppet/provider/netdev_l2_interface/junos.rb
-* Version        : 2012-11-07
-* Platform       : EX | QFX | SRX
+* File           : puppet/provider/port_channel/junos.rb
+* Version        : 2012-12-03
+* Platform       : EX | QFX 
 * Description    : 
 *
 *    The Provider class definition to implement the
-*    netdev_interface type.  There isn't really anything in
+*    port_channel type.  There isn't really anything in
 *    this file; refer to puppet/provider/junos.rb for details.
 *
 * Copyright (c) 2012  Juniper Networks. All Rights Reserved.
@@ -36,35 +36,17 @@
 =end
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..","..",".."))
+require 'puppet/provider/junos/junos_lag'
 
-require 'puppet/provider/junos/junos_interface'
-
-Puppet::Type.type(:netdev_interface).provide(:junos_switch, :parent => Puppet::Provider::Junos::Interface) do
-  @doc = "Junos Physical Interface"
-
+Puppet::Type.type(:port_channel).provide(:junos, :parent => Puppet::Provider::Junos::LAG) do
+  @doc = "Junos Link Aggregation Group"
+  
   has_feature :activable
-  confine :junos_ifd_style => :switch
-  confine :junos_switch_style => :vlan  
+  
   ### invoke class method to autogen the default property methods for both Puppet
   ### and the netdev module.  That's it, yo!
 
   mk_resource_methods    
-  mk_netdev_resource_methods  
-  
-end
-
-require 'puppet/provider/junos/junos_interface_classic'
-
-Puppet::Type.type(:netdev_interface).provide(:junos_classic, :parent => Puppet::Provider::Junos::InterfaceClassic) do
-  @doc = "Junos Physical Interface, Classic Style"
-  
-  has_feature :activable
-  confine :junos_ifd_style => [:classic, :switch]
-  confine :junos_switch_style => [:vlan_l2ng, :bridge_domain]  
-  ### invoke class method to autogen the default property methods for both Puppet
-  ### and the netdev module.  That's it, yo!
-
-  mk_resource_methods    
-  mk_netdev_resource_methods  
+  mk_netdev_resource_methods
   
 end

@@ -1,5 +1,5 @@
 name    'juniper-netdev_stdlib_junos'
-version '2.0.1'
+version '2.0.2'
 source 'https://github.com/Juniper/puppet-netdev-stdlib-junos'
 author 'Jeremy Schulman, Ganesh Nalawade, Juniper Networks'
 license 'See LICENSE file'
@@ -9,4 +9,4 @@ description 'Netdev is a vendor-neutral network abstraction framework developed 
 
 project_page 'https://github.com/Juniper/puppet-netdev-stdlib-junos'
 
-dependency 'netdevops/netdev_stdlib', '>= 1.0.0'
+dependency 'puppetlabs/netdev_stdlib', '>= 0.11.0'

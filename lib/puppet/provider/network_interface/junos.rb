@@ -1,13 +1,13 @@
 =begin
 * Puppet Module  : Provder: netdev
 * Author         : Jeremy Schulman
-* File           : puppet/provider/netdev_l2_interface/junos.rb
+* File           : puppet/provider/network_trunk/junos.rb
 * Version        : 2012-11-07
 * Platform       : EX | QFX | SRX
 * Description    : 
 *
 *    The Provider class definition to implement the
-*    netdev_l2_interface type.  There isn't really anything in
+*    network_interface type.  There isn't really anything in
 *    this file; refer to puppet/provider/junos.rb for details.
 *
 * Copyright (c) 2012  Juniper Networks. All Rights Reserved.
@@ -36,49 +36,35 @@
 =end
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..","..",".."))
-require 'puppet/provider/junos/junos_l2_interface'
 
-Puppet::Type.type(:netdev_l2_interface).provide(:junos_vlan, :parent => Puppet::Provider::Junos::L2Interface ) do
-  @doc = "Junos L2-switch interface"
+require 'puppet/provider/junos/junos_interface'
+
+Puppet::Type.type(:network_interface).provide(:junos_switch, :parent => Puppet::Provider::Junos::Interface) do
+  @doc = "Junos Physical Interface"
+
+  has_feature :activable
+  confine :junos_ifd_style => :switch
+  confine :junos_switch_style => :vlan  
+  ### invoke class method to autogen the default property methods for both Puppet
+  ### and the netdev module.  That's it, yo!
+
+  mk_resource_methods    
+  mk_netdev_resource_methods  
+  
+end
+
+require 'puppet/provider/junos/junos_interface_classic'
+
+Puppet::Type.type(:network_interface).provide(:junos_classic, :parent => Puppet::Provider::Junos::InterfaceClassic) do
+  @doc = "Junos Physical Interface, Classic Style"
   
   has_feature :activable
-  confine :junos_switch_style => :vlan
-  
+  confine :junos_ifd_style => [:classic, :switch]
+  confine :junos_switch_style => [:vlan_l2ng, :bridge_domain]  
   ### invoke class method to autogen the default property methods for both Puppet
   ### and the netdev module.  That's it, yo!
 
   mk_resource_methods    
-  mk_netdev_resource_methods
-  
-end
-
-require 'puppet/provider/junos/junos_l2_interface_bd'
-
-Puppet::Type.type(:netdev_l2_interface).provide(:junos_bd, :parent => Puppet::Provider::Junos::L2InterfaceBridgeDomain) do
-  @doc = "Junos L2-switch interface, Bridge-Domain"
-  
-  has_features :activable  
-  confine :junos_switch_style => :bridge_domain
-    
-  ### invoke class method to autogen the default property methods for both Puppet
-  ### and the netdev module.  That's it, yo!
-
-  mk_resource_methods    
-  mk_netdev_resource_methods
-  
-end
-
-require 'puppet/provider/junos/junos_l2_interface_l2ng'
-
-Puppet::Type.type(:netdev_l2_interface).provide(:junos_l2ng, :parent => Puppet::Provider::Junos::L2InterfaceL2NG) do
-  confine :junos_switch_style => :vlan_l2ng
-  
-  @doc = "Junos L2-switch interface, L2NG"
-  
-  ### invoke class method to autogen the default property methods for both Puppet
-  ### and the netdev module.  That's it, yo!
-
-  mk_resource_methods    
-  mk_netdev_resource_methods
+  mk_netdev_resource_methods  
   
 end

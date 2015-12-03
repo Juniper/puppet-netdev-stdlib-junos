@@ -4,7 +4,7 @@ Netdev is a vendor-neutral network abstraction framework developed by
 Juniper Networks and contributed freely to the DevOps community
 
 This module contains the Junos specific Provider code implementing
-the Resource Types defined in [netdevops/netdev_stdlib](https://github.com/NetdevOps/puppet-netdev-stdlib)
+the Resource Types defined in [puppetlabs/netdev_stdlib](https://github.com/puppetlabs/netdev_stdlib)
 
 # EXAMPLE USAGE
 
@@ -13,7 +13,7 @@ This module has been tested against Puppet agent 2.7.19 and 3.6.1.  Here is a sh
 ~~~~
 node "myswitch1234.mycorp.com" {
      
-  netdev_device { $hostname: }
+  domain_name { $hostname: }
     
   $vlans = {
     'Blue'    => { vlan_id => 100, description => "This is a Blue vlan" },
@@ -23,7 +23,7 @@ node "myswitch1234.mycorp.com" {
     'Yellow'  => { vlan_id => 104, description => "This is a Yellow vlan" }   
   }
     
-  create_resources( netdev_vlan, $vlans )
+  create_resources( network_vlan, $vlans )
     
   $access_ports = [
     'ge-0/0/0',
@@ -36,11 +36,11 @@ node "myswitch1234.mycorp.com" {
     'xe-0/0/2'
   ]
       
-  netdev_l2_interface { $access_ports:
+  network_trunk { $access_ports:
     untagged_vlan => Blue
   }
           
-  netdev_l2_interface { $uplink_ports:
+  network_trunk { $uplink_ports:
     tagged_vlans => keys( $vlans )
   }
 
@@ -94,7 +94,7 @@ node "myswitch1234.mycorp.com" {
 
   * Puppet >= 2.7.19
   * Ruby Gem netconf 0.2.5
-  * Puppet module netdevops/netdev_stdlib version >= 1.0.0
+  * Puppet module puppetlabs/netdev_stdlib version >= 0.11.0
   * Junos OS release and jpuppet image by platform:
     * QFX3500, QFX3600: 
       - JUNOS 12.3X50-D20.1

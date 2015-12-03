@@ -1,6 +1,6 @@
 {
   "name": "juniper-netdev_stdlib_junos",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Jeremy Schulman, Ganesh Nalawade, Juniper Networks",
   "summary": "Junos Provider code for Networking Device (netdev stdlib) Library",
   "license": "See LICENSE file",
@@ -10,33 +10,8 @@
   "description": "Netdev is a vendor-neutral network abstraction framework developed by Juniper Networks and contributed freely to the DevOps community.",
   "dependencies": [
     {
-      "name": "netdevops/netdev_stdlib",
-      "version_requirement": ">= 1.0.0"
-    },
-    {
-      "name": "netdevops/netdev_stdlib",
-      "version_requirement": ">= 1.0.0"
-    },
-    {
-      "name": "netdevops/netdev_stdlib",
-      "version_requirement": ">= 1.0.0"
-    },
-    {
-      "name": "netdevops/netdev_stdlib",
-      "version_requirement": ">= 1.0.0"
-    },
-    {
-      "name": "netdevops/netdev_stdlib",
-      "version_requirement": ">= 1.0.0"
-    },
-    {
-      "name": "netdevops/netdev_stdlib",
-      "version_requirement": ">= 1.0.0"
-    },
-    {
-      "name": "netdevops/netdev_stdlib",
-      "version_requirement": ">= 1.0.0"
-    },
-    {"name":"netdevops/netdev_stdlib","version_requirement":">= 1.0.0"}
+      "name": "puppetlabs/netdev_stdlib",
+      "version_requirement": ">= 0.11.0"
+    }
   ]
 }
