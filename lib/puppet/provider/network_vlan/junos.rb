@@ -1,13 +1,13 @@
 =begin
 * Puppet Module  : Provder: netdev
 * Author         : Jeremy Schulman
-* File           : puppet/provider/netdev_lag/junos.rb
-* Version        : 2012-12-03
-* Platform       : EX | QFX 
+* File           : puppet/provider/network_vlan/junos.rb
+* Version        : 2012-11-07
+* Platform       : EX | QFX | SRX
 * Description    : 
 *
 *    The Provider class definition to implement the
-*    netdev_lag type.  There isn't really anything in
+*    network_vlan type.  There isn't really anything in
 *    this file; refer to puppet/provider/junos.rb for details.
 *
 * Copyright (c) 2012  Juniper Networks. All Rights Reserved.
@@ -36,17 +36,31 @@
 =end
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..","..",".."))
-require 'puppet/provider/junos/junos_lag'
+require 'puppet/provider/junos/junos_vlan'
 
-Puppet::Type.type(:netdev_lag).provide(:junos, :parent => Puppet::Provider::Junos::LAG) do
-  @doc = "Junos Link Aggregation Group"
-  
-  has_feature :activable
-  
+Puppet::Type.type(:network_vlan).provide(:junos_vlan, :parent => Puppet::Provider::Junos::Vlan) do
+  @doc = "Junos VLAN"
+
+  has_features :activable, :describable, :no_mac_learning
+  confine :junos_switch_style => [:vlan, :vlan_l2ng]
+
   ### invoke class method to autogen the default property methods for both Puppet
   ### and the netdev module.  That's it, yo!
 
   mk_resource_methods    
   mk_netdev_resource_methods
+
+end
+
+require 'puppet/provider/junos/junos_vlan_bd'
+
+Puppet::Type.type(:network_vlan).provide(:junos_bd, :parent => Puppet::Provider::Junos::BridgeDomain) do
+  @doc = "Junos VLAN for Bridge-Domain"
   
+  has_features :activable, :describable, :no_mac_learning
+  confine :junos_switch_style => :bridge_domain  
+
+  mk_resource_methods    
+  mk_netdev_resource_methods
+
 end

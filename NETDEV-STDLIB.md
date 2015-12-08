@@ -9,25 +9,25 @@ All netdev resources types include the following two properties:
     * true: configuration will be present and active
     * false: configuration will be present but not active
 
-## netdev_device
+## domain_name
 
-There must be a single _netdev_device_ resource present in the catalog.  This resource is used to abstract the 
+There must be a single _domain_name_ resource present in the catalog.  This resource is used to abstract the 
 configuration controls of the network device.  All other netdev resources will have an implicit auto-require,
-which causes the netdev_device resource to be evaluated prior to any other netdev resource-type.  You can
-choose any name for the netdev_device resource as there is no naming dependency in the code.  
+which causes the domain_name resource to be evaluated prior to any other netdev resource-type.  You can
+choose any name for the domain_name resource as there is no naming dependency in the code.  
 
 The following example uses the Facter variable __$hostname__:
 
 ````puppet
 node "switch1234.mycorp.com" {
 
-   netdev_device { $hostname: }
+   domain_name { $hostname: }
    
 }
 
 ````
 
-## netdev_interface
+## network_interface
 
 This resource models the properties of the physical interfaces:
 
@@ -40,9 +40,9 @@ This resource models the properties of the physical interfaces:
 ````puppet
 node "switch1234.mycorp.com" {
     
-  netdev_device { $hostname: }
+  domain_name { $hostname: }
        
-  netdev_interface { "ge-0/0/0":
+  network_interface { "ge-0/0/0":
     admin => down,
     mtu => 2000
   }
@@ -50,9 +50,9 @@ node "switch1234.mycorp.com" {
 }       
 ````  
 
-## netdev_vlan
+## network_vlan
 
-This resource models the properties of a VLAN.  VLANs are assigned to interfaces using the *netdev_l2_interface* resource.
+This resource models the properties of a VLAN.  VLANs are assigned to interfaces using the *network_trunk* resource.
 
   * vlan_id => _number_
   * description => _string_
@@ -60,9 +60,9 @@ This resource models the properties of a VLAN.  VLANs are assigned to interfaces
 ````puppet
 node "switch1234.mycorp.com" {
     
-  netdev_device { $hostname: }
+  domain_name { $hostname: }
        
-  netdev_vlan { "Blue":
+  network_vlan { "Blue":
      vlan_id => 100,
      description => "This is my Blue vlan."
   }
@@ -70,7 +70,7 @@ node "switch1234.mycorp.com" {
 }       
 ````
 
-## netdev_l2_interface
+## network_trunk
 
 This resource models the assignment of VLANs to layer-2 switch ports:
 
@@ -82,24 +82,24 @@ This resource models the assignment of VLANs to layer-2 switch ports:
 ````puppet  
 node "switch1234.mycorp.com" {
     
-  netdev_device { $hostname: }
+  domain_name { $hostname: }
        
   # access port, packets without VLAN tag
 
-  netdev_l2_interface { 'ge-0/0/0':
+  network_trunk { 'ge-0/0/0':
      untagged_vlan => Red
   }
   
   # trunk port, multiple VLAN taggs
   
-  netdev_l2_interface { 'xe-0/0/0':
+  network_trunk { 'xe-0/0/0':
      tagged_vlans => [ Red, Green, Blue ]
   }
   
   # trunk port, multiple VLAN tags +
   # untagged packets go to 'native VLAN'
   
-  netdev_l2_interface { 'xe-0/0/2':
+  network_trunk { 'xe-0/0/2':
      tagged_vlans => [ Red, Green, Blue ],
      untagged_vlan => Yellow
   }
@@ -107,7 +107,7 @@ node "switch1234.mycorp.com" {
 }
 ````
 
-## netdev_lag
+## port_channel
 
 This resource models the properties of a Link Aggregation Group (LAG):
 
@@ -118,24 +118,24 @@ This resource models the properties of a Link Aggregation Group (LAG):
 ````puppet
 node "switch1234.mycorp.com" {
     
-  netdev_device { $hostname: }
+  domain_name { $hostname: }
        
   $ae0_ports = [ 'ge-0/0/0', 'ge-1/0/0', 'ge-0/0/2', 'ge-1/0/2' ]
 
   # we don't want any VLANs configs on the LAG physical ports,
   # so ensure there is no config
   
-  netdev_l2_interface { $ae0_ports: ensure => absent }
+  network_trunk { $ae0_ports: ensure => absent }
 
   # define the LAG port, and then assign VLANs 
   
-  netdev_lag { 'ae0':
+  port_channel { 'ae0':
      links => $ae0_ports,
      lacp => active,
      minimum_links => 2
   }
   
-  netdev_l2_interface { 'ae0':
+  network_trunk { 'ae0':
      tagged_vlans => [ Red, Green, Blue ]
   }
   
@@ -155,7 +155,7 @@ puppet template resource:
 ````puppet
 node "switch1234.mycorp.com" {
 
-  netdev_device { $hostname: }
+  domain_name { $hostname: }
 
   # service variables passed in template file
   $services = [ [ 'ftp' ], [ 'ssh' ], [ 'telnet' ], [ 'netconf', 'ssh' ] ]

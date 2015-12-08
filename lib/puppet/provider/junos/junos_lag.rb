@@ -159,14 +159,14 @@ class Puppet::Provider::Junos::LAG < Puppet::Provider::Junos
   ##### ------------------------------------------------------------   
 
   def get_cookie_links( cfg )            
-    cfg.xpath( "apply-macro[name = 'netdev_lag[:links]']/data/name" ).collect { |n|
+    cfg.xpath( "apply-macro[name = 'port_channel[:links]']/data/name" ).collect { |n|
       n.text
     }    
   end
   
   def set_cookie_links( cfg )
     cfg.send(:'apply-macro', Netconf::JunosConfig::REPLACE ) {
-      cfg.name 'netdev_lag[:links]'
+      cfg.name 'port_channel[:links]'
       resource[:links].each{ |ifd|
         cfg.data { cfg.name ifd }
       }

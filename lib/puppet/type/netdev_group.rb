@@ -61,16 +61,16 @@ Puppet::Type.newtype(:netdev_group) do
   end
  
   ##### -------------------------------------------------------------
-  ##### Auto require the netdev_device resource - 
-  #####   There must be one netdev_device resource defined in the
+  ##### Auto require the domain_name resource - 
+  #####   There must be one domain_name resource defined in the
   #####   catalog, it doesn't matter what the name of the device is,
   #####   just that one exists.  
   ##### ------------------------------------------------------------- 
   
-  autorequire(:netdev_device) do    
-    netdev = catalog.resources.select{ |r| r.type == :netdev_device }[0]
-    raise "No netdev_device found in catalog" unless netdev
-    netdev.title   # returns the name of the netdev_device resource
+  autorequire(:domain_name) do    
+    netdev = catalog.resources.select{ |r| r.type == :domain_name }[0]
+    raise "No domain_name found in catalog" unless netdev
+    netdev.title   # returns the name of the domain_name resource
   end  
   
   def refresh

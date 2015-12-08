@@ -2,7 +2,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..","..",".."))
 
 require 'puppet/provider/junos/junos_parent'
 
-Puppet::Type.type(:netdev_device).provide(:junos, :parent => Puppet::Provider::Junos) do
+Puppet::Type.type(:domain_name).provide(:junos, :parent => Puppet::Provider::Junos) do
   
   @doc = "Junos Device Managed Resource for auto-require"
   

@@ -33,3 +33,6 @@
 * Fixed puppet lint issues
 * Bugfixes
 * Upgrade version to 2.0.1
+
+### 2015-12-03
+* Use puppetlabs/netdev_stdlib instead of netdevops/netdev_stdlib, upgrade version to 2.0.2

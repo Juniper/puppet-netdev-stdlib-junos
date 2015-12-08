@@ -1,6 +1,6 @@
 node 'myswitch1234.mycorp.com' {
 
-  netdev_device { $hostname:}
+  domain_name { $hostname:}
   import 'syslogs.pp'
   import 'interface.pp'
   import 'services.pp'

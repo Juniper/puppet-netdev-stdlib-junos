@@ -6,7 +6,7 @@
 * Platform       : EX-L2NG
 * Description    : 
 *
-*    This file implements the netdev_l2_interface type for
+*    This file implements the network_trunk type for
 *    the EX/MX products supporting the L2NG style.  
 *
 * Copyright (c) 2013  Juniper Networks. All Rights Reserved.
@@ -89,7 +89,7 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
   end
   
   def default_description
-    "Puppet created netdev_l2_interface: #{resource[:name]}"
+    "Puppet created network_trunk: #{resource[:name]}"
   end
   
   def netdev_retrieve_fam_eth_info( fam_eth_cfg )
@@ -133,7 +133,7 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
       
       @@rpc ||= Puppet::Provider::Junos.netdev.netconf.rpc
       @@catalog ||= resource.catalog
-      @@catalog_netdev_vlan ||= @@catalog.resources.select{ |r| r.type == :netdev_vlan }
+      @@catalog_network_vlan ||= @@catalog.resources.select{ |r| r.type == :network_vlan }
             
       @@vlan_name_hash ||= {}
       @@vlan_tag_hash ||= {}
@@ -164,7 +164,7 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
         
         if pp_vlan_id = @@vlan_name_hash[vlan_name]
           # then Puppet already knows about this vlan, need to see if the vlan-id
-          # has changed as a result of a netdev_vlan update
+          # has changed as a result of a network_vlan update
           if dev_vlan_id != pp_vlan_id
             @@vlan_name_hash['~' + vlan_name] = pp_vlan_id
           end
@@ -183,7 +183,7 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
       # we snarf the tilde (~) in case this is a triggered vlan_name
       # change; and the vlan_names in the catalog don't have a tilde.  Yo!
       
-      if vlan_res = @@catalog.resource( :netdev_vlan, vlan_name.sub( '~',''))
+      if vlan_res = @@catalog.resource( :network_vlan, vlan_name.sub( '~',''))
         vlan_id = vlan_res[:vlan_id]          
         @@vlan_name_hash[vlan_name] = vlan_id
         @@vlan_tag_hash[vlan_id] = vlan_name
@@ -217,7 +217,7 @@ class Puppet::Provider::Junos::L2InterfaceL2NG < Puppet::Provider::Junos
       # convert to Fixnum now for comparison ...
       tag_id_i = tag_id.to_i            
       
-      p_ndev_vlan = @@catalog_netdev_vlan.select{ |v| v[:vlan_id].to_i == tag_id_i }[0]
+      p_ndev_vlan = @@catalog_network_vlan.select{ |v| v[:vlan_id].to_i == tag_id_i }[0]
       if p_ndev_vlan
         vlan_name = p_ndev_vlan[:name]
         @@vlan_name_hash[vlan_name] = tag_id

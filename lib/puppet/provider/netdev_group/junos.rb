@@ -7,7 +7,7 @@
 * Description    : 
 *
 *    The Provider class definition to implement the
-*    netdev_lag type.  There isn't really anything in
+*    port_channel type.  There isn't really anything in
 *    this file; refer to puppet/provider/junos.rb for details.
 *
 * Copyright (c) 2012  Juniper Networks. All Rights Reserved.

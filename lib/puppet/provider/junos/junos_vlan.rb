@@ -104,9 +104,9 @@ class Puppet::Provider::Junos::Vlan < Puppet::Provider::Junos
     # we now need to update all instances of the use of the vlan. Yo!
     # so the trick here is to create a false-name by prepending a 
     # tilde (~) before the vlan_name.  Then tinker with the 
-    # associated  netdev_l2_interface properties so that it
+    # associated  network_trunk properties so that it
     # triggers the resource to 'do the right thing'.  There is
-    # a dependency in the netdev_l2_interface code on the use
+    # a dependency in the network_trunk code on the use
     # of the '~' so be aware if you want to muck with it.  Yo!
     
     vlan_name = resource[:name]
@@ -123,7 +123,7 @@ class Puppet::Provider::Junos::Vlan < Puppet::Provider::Junos
     
     intfs.each do |x_int|
       ifd_name = x_int.text[/(.*)\./,1]
-      if l2_intf = catalog.resource( :netdev_l2_interface, ifd_name )
+      if l2_intf = catalog.resource( :network_trunk, ifd_name )
         if l2_intf[:tagged_vlans].include? [vlan_name]
           l2_intf[:tagged_vlans] = l2_intf[:tagged_vlans] - vlan_old + vlan_new
         end
