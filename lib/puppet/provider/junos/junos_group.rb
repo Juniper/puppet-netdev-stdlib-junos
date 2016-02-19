@@ -66,8 +66,15 @@ class Puppet::Provider::Junos::Group < Puppet::Provider::Junos
       @ndev_res.set_active_state( grp )
     end
     load
+
+    # Check if apply-group is configured
+    @@rpc ||= Puppet::Provider::Junos.netdev.netconf.rpc
+    apply_grp_config = @@rpc.get_configuration{ |a_grp|
+      a_grp.send('apply-groups')
+    }   
+    apply_grp = apply_grp_config.xpath("//apply-groups=\'#{resource[:name]}\'")
+    if grp and apply_grp then return grp else return false end 
  
-    if grp then return grp else return false end
   end   
 
 
@@ -121,7 +128,7 @@ class Puppet::Provider::Junos::Group < Puppet::Provider::Junos
 
   def netdev_resxml_edit( xml )
     if @config  
-      xml << @config
+      xml << @config.to_s
     end 
     return xml
   end
