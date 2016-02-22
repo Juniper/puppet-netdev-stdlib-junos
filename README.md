@@ -130,7 +130,7 @@ Juniper Networks is actively contributing to and maintaining this repo. Please c
 
 *Contributors:*
 
-[Ganesh Nalawade](https://github.com/ganeshnalawade)
+[Ganesh Nalawade](https://github.com/ganeshnalawade), [Priyal Jain](https://github.com/jainpriyal)
 
 *Former Contributors:*
 
