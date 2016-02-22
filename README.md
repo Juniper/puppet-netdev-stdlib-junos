@@ -126,8 +126,15 @@ See RESOURCE-STDLIB.md for documentation and usage examples
 
 # CONTRIBUTORS
 
-   * Jeremy Schulman, Juniper Networks
-   * Ganesh Nalawade, Juniper Networks 
+Juniper Networks is actively contributing to and maintaining this repo. Please contact jnpr-community-netdev@juniper.net for any queries.
+
+*Contributors:*
+
+[Ganesh Nalawade](https://github.com/ganeshnalawade)
+
+*Former Contributors:*
+
+[Jeremy Schulman](https://github.com/jeremyschulman)
    
 # LICENSES
 
