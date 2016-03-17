@@ -29,7 +29,9 @@
 ### 2015-06-30
 * Add support for defined type 'apply_group' and minor bug fixes, upgrade to version 2.0.1-beta
 
-### 2015-09-08
+### 2016-03-17
+* Bug fix: 
+  - Issue #17 Puppet: Error message while executing XML format ERB template
+  - Issue #20 Issue while configuring LAG on 15.2 junos-x image
 * Fixed puppet lint issues
-* Bugfixes
-* Upgrade version to 2.0.1
+* Upgrade to a stable version 2.0.2
