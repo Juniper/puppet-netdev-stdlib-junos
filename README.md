@@ -138,4 +138,4 @@ Juniper Networks is actively contributing to and maintaining this repo. Please c
    
 # LICENSES
 
-   See LICENSE-JUNIPER
+   See [LICENSE](https://github.com/Juniper/puppet-netdev-stdlib-junos/blob/master/LICENSE)
