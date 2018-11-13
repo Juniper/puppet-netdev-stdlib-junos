@@ -62,7 +62,7 @@ class Puppet::Provider::Junos < Puppet::Provider
     
   def flush
     if defined? @ndev_res[:name]
-      Puppet.debug( "#{self.resource.type}:: Flusing #{resource[:name]}" ) 
+      Puppet.debug( "#{self.resource.type}:: Flushing #{resource[:name]}" )
       config_update resource[:name]     
     else
       Puppet.debug( "#{self.resource.type}:: Nothing to flush #{resource[:name]}" )       

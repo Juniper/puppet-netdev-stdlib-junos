@@ -180,15 +180,16 @@ class Puppet::Provider::Junos::Group < Puppet::Provider::Junos
         if resource[:ensure] == :absent or 
            resource[:active] != @ndev_res[:active]
           Puppet::Provider::Junos.instance_method(:flush).bind(self).call  
+          @flush_exec = true
         else
           Puppet.debug( "#{self.resource.type}:: Nothing to flush #{resource[:name]}" ) 
         end
       elsif resource[:ensure] == :present
         Puppet::Provider::Junos.instance_method(:flush).bind(self).call
+        @flush_exec = true
       else
         Puppet.debug( "#{self.resource.type}:: Nothing to flush #{resource[:name]}" )
       end
-      @flush_exec = true
     end    
   end
 
