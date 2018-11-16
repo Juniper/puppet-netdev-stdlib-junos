@@ -50,27 +50,28 @@ class Puppet::Provider::Junos::Interface < Puppet::Provider::Junos
     @ndev_res[:admin] = ifd.xpath('disable').empty? ? :up : :down
     @ndev_res[:mtu] = (mtu = ifd.xpath('mtu')[0]).nil? ? -1 : mtu.text.to_i
     
-    phy_options = ifd.xpath('ether-options')
+    if $speed_configurable || $duplex_configurable
+      phy_options = ifd.xpath('ether-options')
     
-    if phy_options.empty?
-      @ndev_res[:speed] = :auto
-      @ndev_res[:duplex] = :auto
-    else 
-      
-      @ndev_res[:duplex] = case phy_options.xpath('link-mode').text.chomp
-        when 'full-duplex' then :full
-        when 'half-duplex' then :half
-        else :auto
-      end
-      
-      if speed = phy_options.xpath('speed')[0]
-        @ndev_res[:speed] = speed_from_junos( speed.first_element_child.name )
-      else
+      if phy_options.empty?
         @ndev_res[:speed] = :auto
+        @ndev_res[:duplex] = :auto
+      else
+      
+        @ndev_res[:duplex] = case phy_options.xpath('link-mode').text.chomp
+          when 'full-duplex' then :full
+          when 'half-duplex' then :half
+          else :auto
+        end
+      
+        if speed = phy_options.xpath('speed')[0]
+          @ndev_res[:speed] = speed_from_junos( speed.first_element_child.name )
+        else
+          @ndev_res[:speed] = :auto
+        end
       end
-    end
-    
-    return true     
+    end   #### $speed_configurable || $duplex_configurable
+    return true
   end
 
   ### ---------------------------------------------------------------
@@ -137,33 +138,37 @@ class Puppet::Provider::Junos::Interface < Puppet::Provider::Junos
   end
   
   def xml_change_speed( xml )         
-    xml.send(:'ether-options') {
-      xml.speed {
-        if resource[:speed] == :auto
-          if not @ndev_res.is_new?
-            jval = speed_to_junos( @ndev_res[:speed] )
-            xml.send( jval, Netconf::JunosConfig::DELETE )
+    if $speed_configurable
+      xml.send(:'ether-options') {
+        xml.speed {
+          if resource[:speed] == :auto
+            if not @ndev_res.is_new?
+              jval = speed_to_junos( @ndev_res[:speed] )
+              xml.send( jval, Netconf::JunosConfig::DELETE )
+            end
+          else
+            xml.send( speed_to_junos( resource[:speed] ))
           end
-        else
-          xml.send( speed_to_junos( resource[:speed] ))
-        end
+        }
       }
-    }    
+    end
   end
   
   def xml_change_duplex( xml )     
-    xml.send(:'ether-options') {
-      if resource[:duplex] == :auto
-        unless @ndev_res.is_new?
-          xml.send( :'link-mode', Netconf::JunosConfig::DELETE )
+    if $duplex_configurable
+      xml.send(:'ether-options') {
+        if resource[:duplex] == :auto
+          unless @ndev_res.is_new?
+            xml.send( :'link-mode', Netconf::JunosConfig::DELETE )
+          end
+        else
+          xml.send( :'link-mode', case resource[:duplex]
+             when :full then 'full-duplex'
+             when :half then 'half-duplex'
+          end )
         end
-      else
-        xml.send( :'link-mode', case resource[:duplex]
-           when :full then 'full-duplex'
-           when :half then 'half-duplex'
-        end )
-      end
-    }    
+      }
+    end
   end
-  
+
 end
