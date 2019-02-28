@@ -111,6 +111,19 @@ class Puppet::Provider::Junos::LAG < Puppet::Provider::Junos
   end
 
   ### ---------------------------------------------------------------
+  ### Trim the ifd string to remove double quotes and brackets
+  ### Converts ["et-0/0/0.0"] to et-0/0/0.0
+  ### ---------------------------------------------------------------
+  def trim_ifd(str)
+     if str[0..1] == '["' && str[-2..-1] == '"]'
+        # Remove the first 2 and last 2 characters
+        str[2...-2]
+     else
+        str
+     end
+  end
+
+  ### ---------------------------------------------------------------
   ### Overriding Parent methods
   ### ---------------------------------------------------------------  
   
@@ -168,7 +181,9 @@ class Puppet::Provider::Junos::LAG < Puppet::Provider::Junos
     cfg.send(:'apply-macro', Netconf::JunosConfig::REPLACE ) {
       cfg.name 'netdev_lag[:links]'
       resource[:links].each{ |ifd|
-        cfg.data { cfg.name ifd }
+      # Each ifd is an array like this : ["et-1/0/0"]
+      # Select et-1/0/0 out of this array
+        cfg.data { cfg.name ifd[0] }
       }
     }
   end
@@ -242,8 +257,21 @@ class Puppet::Provider::Junos::LAG < Puppet::Provider::Junos
     par = xml.instance_variable_get(:@parent)         
     dot_ifd = par.at_xpath('ancestor::interfaces')
 
-    add.each{ |new_ifd| Nokogiri::XML::Builder.with( dot_ifd ) {
+    # del entries look like this:
+    # ["et-0/0/14:0", "et-0/0/16:0", "et-0/0/20:0"]
+    # Hence, they do not require trimming.
+    del.each{ |new_ifd| Nokogiri::XML::Builder.with( dot_ifd ) {
       |dot| dot.interface { dot.name new_ifd
+        dot.send(@ifd_ether_options) {
+          dot.send( :'ieee-802.3ad', Netconf::JunosConfig::DELETE )
+        }
+    }}}
+
+    # add has entries like this:
+    # ["[\"et-0/0/15:0\"]", "[\"et-0/0/16:0\"]", "[\"et-0/0/20:0\"]"]
+    # Therefore needs to be trimmed to get ifds.
+    add.each{ |new_ifd| Nokogiri::XML::Builder.with( dot_ifd ) {
+      |dot| dot.interface { dot.name trim_ifd(new_ifd)
         dot.send(@ifd_ether_options.to_sym) {
           dot.send(:'ieee-802.3ad') {
             dot.bundle resource[:name]
@@ -251,13 +279,6 @@ class Puppet::Provider::Junos::LAG < Puppet::Provider::Junos
         }
     }}}  
 
-    del.each{ |new_ifd| Nokogiri::XML::Builder.with( dot_ifd ) {
-      |dot| dot.interface { dot.name new_ifd
-        dot.send(@ifd_ether_options) {
-          dot.send( :'ieee-802.3ad', Netconf::JunosConfig::DELETE )
-        }
-    }}}      
-        
   end
 
 end
