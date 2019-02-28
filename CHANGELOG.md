@@ -35,3 +35,9 @@
   - Issue #20 Issue while configuring LAG on 15.2 junos-x image
 * Fixed puppet lint issues
 * Upgrade to a stable version 2.0.2
+
+### 2019-02-27
+* Bug fix:
+  - Issue with netdev_lag creation and deletion - interfaces arriving as array
+    entries changed to look like normal interfaces to netconf.
+* Upgrade to 2.0.5
