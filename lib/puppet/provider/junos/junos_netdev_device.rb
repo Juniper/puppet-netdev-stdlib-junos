@@ -18,11 +18,19 @@ module NetdevJunos
       @ready = false      
       
       fqdn = Facter.value(:fqdn)       
-      Puppet::Transaction.on_transaction_done = self.method(:commit)      
+      Puppet::Transaction.on_transaction_done = self.method(:commit)
+      is_docker = (Facter.value(:container) == "docker")
 
-      NetdevJunos::Log.debug "Opening a local connection: #{fqdn}"  
-      @netconf = Netconf::IOProc.new
-      @netconf.instance_variable_set :@trans_timeout, nil
+      if is_docker
+        # NETCONF_USER refers to the login username configured for puppet operations
+        login = { target: 'localhost', username: ENV['NETCONF_USER'] }
+        @netconf = Netconf::SSH.new(login)
+        NetdevJunos::Log.debug "Opening a SSH connection from docker container: #{is_docker}"
+      else
+        @netconf = Netconf::IOProc.new
+        @netconf.instance_variable_set :@trans_timeout, nil
+        NetdevJunos::Log.debug "Opening a local connection: #{fqdn}"
+      end
       
       # --- assuming caller is doing exception handling around this!
       @netconf.open          
