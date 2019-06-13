@@ -38,5 +38,12 @@
       "version_requirement": ">= 1.0.0"
     },
     {"name":"netdevops/netdev_stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "tags": [
+    "juniper",
+    "junos",
+    "netdevops",
+    "network",
+    "networking"
   ]
 }
