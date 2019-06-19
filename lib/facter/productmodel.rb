@@ -19,7 +19,7 @@ Facter.add(:productmodel) do
     if is_docker
       require 'net/netconf/jnpr'
       # NETCONF_USER refers to the login username configured for puppet operations
-      login = { target: 'localhost', username: ENV['NETCONF_USER'] }
+      login = { target: 'localhost', username: ENV['NETCONF_USER'], port:22 }
       @netconf = Netconf::SSH.new(login)
     # Else, open an IOProc session
     else
