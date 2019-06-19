@@ -23,7 +23,8 @@ module NetdevJunos
 
       if is_docker
         # NETCONF_USER refers to the login username configured for puppet operations
-        login = { target: 'localhost', username: ENV['NETCONF_USER'], port:22 }
+        login = { target: 'localhost', username: ENV['NETCONF_USER'],
+                  port: ENV['NETCONF_PORT'] ? ENV['NETCONF_PORT'].to_i : 22 }
         @netconf = Netconf::SSH.new(login)
         NetdevJunos::Log.debug "Opening a SSH connection from docker container: #{is_docker}"
       else
