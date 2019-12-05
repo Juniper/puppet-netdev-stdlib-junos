@@ -1,7 +1,7 @@
 {
   "name": "juniper-netdev_stdlib_junos",
   "version": "2.1.0",
-  "author": "Jeremy Schulman, Ganesh Nalawade, Juniper Networks",
+  "author": "Raja Shekar Mekala, Juniper Networks",
   "summary": "Junos Provider code for Networking Device (netdev stdlib) Library",
   "license": "See LICENSE file",
   "source": "https://github.com/Juniper/puppet-netdev-stdlib-junos",
