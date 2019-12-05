@@ -12,7 +12,7 @@
 
 Facter.add(:container) do
   setcode do
-    query = ":/docker"
+    query = "/docker"
     arr = File.readlines("/proc/1/cgroup").grep /#{query}/i
     if arr.any?
        "docker"
