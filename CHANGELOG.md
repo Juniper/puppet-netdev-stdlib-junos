@@ -41,3 +41,9 @@
   - Issue with netdev_lag creation and deletion - interfaces arriving as array
     entries changed to look like normal interfaces to netconf.
 * Upgrade to 2.0.5
+
+### 2019-12-05
+* Features:
+  - Added support to run puppet-agent from a container
+  - Added a new fact conatiner: `docker` or `false` to indicate
+  if puppet is running in an container environment.
