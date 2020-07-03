@@ -41,8 +41,3 @@
   - Issue with netdev_lag creation and deletion - interfaces arriving as array
     entries changed to look like normal interfaces to netconf.
 * Upgrade to 2.0.5
-
-### 2020-07-03
-* Bug fix:
-   - Enabled case-insensitive comparisons for QFX product models.
-* Upgrade to 2.0.6
