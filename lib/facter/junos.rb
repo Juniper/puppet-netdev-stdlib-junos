@@ -6,7 +6,7 @@
   Facter.add(:junos_personality) do
     setcode do
        case Facter.value("productmodel")
-       when /^(ex)|(qfx)|(pvi-model)/
+       when /^(ex)|(qfx)|(pvi-model)/i
           "JUNOS_switch"
        when /^srx(\d){4}/
           "JUNOS_SRX_HE"
