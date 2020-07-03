@@ -47,3 +47,8 @@
   - Added support to run puppet-agent from a container
   - Added a new fact conatiner: `docker` or `false` to indicate
   if puppet is running in an container environment.
+
+### 2020-07-03
+* Bug fix:
+  - Case-insensitive comparison for QFX product models.
+* Upgrade to 2.1.1
